@@ -1,0 +1,91 @@
+
+def horse_grupo1 (x,y,n):
+    from time import time #importamos la función time para capturar tiempos
+    t = [];
+    #AQUI EN "N" PONER EL TAMAÑO
+    N = n;
+    NCUAD = N*N;
+
+    #AQUI POSICION DEL CABALLO
+    VAR_X = x;
+    VAR_Y = y;
+
+    filas = N;
+    columnas = N;
+
+    h = [ 2, 1, -1, -2, -2, -1,  1,  2];
+    v = [ 1, 2,  2,  1, -1, -2, -2, -1];
+
+    iter = [0];
+
+    def PrintMatrix(Matriz): 
+        print("     ", end="");
+        for j in range(len(Matriz[0])):
+            print("%5d " % j, end="");
+        print();
+        print("     ", end="")
+        for j in range(len(Matriz[0])):
+            print("------", end="");
+        print();
+        for i in range(len(Matriz)):
+            print("%3d |" % (i), end="")
+            for j in range(len(Matriz[0])):
+                print("%5d " % (Matriz[i][j]), end="");
+            print();
+    def CrearMatriz(Matriz):
+        for inicializar in range(filas):
+            Matriz.append([0]*columnas)
+
+        for i in range(filas):
+            for j in range(columnas):
+                Matriz[i][j]=0;
+    CrearMatriz(t);
+    def Counter(x,y,ops):
+        for i in range(8):
+            xn1 = x + h[i];
+            yn1 = y + v[i];
+            ##print(xn1,yn1);
+            if (xn1 >= 0 and xn1 < N and yn1 >= 0 and yn1 < N):
+                if t[xn1][yn1] == 0:
+                    ops.append([0,i]);
+                    for j in range(8):
+                        xn2 = xn1 + h[j];
+                        yn2 = yn1 + v[j];
+                        if xn2 >= 0 and xn2 < N and yn2 >= 0 and yn2 < N:
+                            if t[xn2][yn2] == 0:
+                                ops[len(ops)-1][0] +=1;
+        ops.sort();
+    def Tenta(i,x,y,q):
+        ops = [];
+        Counter(x,y,ops);
+        m=0;
+        q[0]=0;
+        while (~q[0]==-1) and (m < len(ops)):
+            xn = x + h[ops[m][1]];
+            yn = y + v[ops[m][1]];
+            if (xn < N) and (yn < N):
+                if t[xn][yn] == 0:
+                    t[xn][yn] = i;
+                    if i < NCUAD:
+                        Tenta(i + 1, xn, yn, q);
+                        if ~q[0] == -1:
+                            t[xn][yn] = 0;
+                    else:
+                        q[0] = 1;
+            m +=1;
+            iter[0] +=1; 
+                        
+    def PasoDeCaballo():
+        q=[False];
+        t[VAR_X][VAR_Y] = 1;
+        Tenta(2, VAR_X, VAR_Y, q);
+        PrintMatrix(t);
+
+    def Main():
+        tiempo_inicial = time(); 
+        PasoDeCaballo();
+        tiempo_final = time();
+        return tiempo_final - tiempo_inicial;
+        #print ("El tiempo de ejecucion fue:",tiempo_ejecucion) #En segundos
+
+    return Main();
