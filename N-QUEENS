@@ -1,0 +1,78 @@
+import time
+
+class Point:
+    def __init__(self,x=0,y=0):
+        self.x = x
+        self.y = y
+    def copyPoint(self,pt):
+        self.x = pt.x
+        self.y = pt.y
+
+    def set(self,_x, _y):
+        self.x = _x
+        self.y = _y
+    
+class Queens:
+    def checkDiagonal(self,x,y,a,b):
+        if x<0 or y <0 or x>=self.count or y>=self.count: return True
+        if self.queens[x +y*self.count]: return False
+        if self.checkDiagonal(x+a,y+b,a,b): return True
+        return False
+
+    def check(self, x, y):
+        if self.ln[y] or self.cl[x]: return False
+        if not self.checkDiagonal(x,y,-1,-1): return False
+        if not self.checkDiagonal(x,y,1,-1): return False
+        if not self.checkDiagonal(x,y,-1,1): return False
+        if not self.checkDiagonal(x,y,1,1): return False
+        return True
+
+    def putQueens(self,pt,size):
+        i=self.count
+        while i:
+            if not size: return True
+            if self.check(pt.x, pt.y):
+                self.queens[pt.x + (pt.y * self.count)] = self.cl[pt.x] = self.ln[pt.y] = True
+                temp = Point()
+                temp.copyPoint(pt)
+                temp.x+=1
+                if temp.x>= self.count: temp.x=0
+                temp.y+=1
+                if temp.y>= self.count: temp.y=0
+                if self.putQueens(temp,size-1): return True
+                self.queens[pt.x + pt.y * self.count] = self.cl[pt.x] = self.ln[pt.y] = False
+            pt.x+=1
+            if(pt.x >= self.count): pt.x=0
+            i=i-1
+        return False
+
+    def displayBoard(self):
+        line = ''
+        for i in range(len(self.queens)-self.count*2):
+            if (i%self.count==0): 
+                print(line)
+                line=''
+            if self.queens[i]: line+='X '
+            else: line+='. '
+        
+    def solve(self,x,y,size):
+        t0 = time.time()
+        self.count = size
+        lens = (size+1)*(size+1)
+        self.queens = [0]*lens
+        self.ln = [0]*lens
+        self.cl = [0]*lens
+        point = Point()
+        point.set(x,y)
+        self.putQueens(point,size)
+        self.displayBoard()
+        t1 = time.time() - t0
+        return t1
+
+
+def queens_grupo3(x,y,n):
+    q = Queens()
+    time = q.solve(x,y,n)
+    return time
+
+queens_grupo3(0,0,26)
